@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # Configuration
-DEVICE_UUID="${DEVICE_UUID:-5de5e719a92ba905a52a405bef58d04d}"
+DEVICE_UUID="${DEVICE_UUID:-4a7637ebf6280506960f7f407aabdf11}"
 # Wait at least 3 minutes after triggering update before checking version.
 WAIT_TIME="${WAIT_TIME:-180}"
 RETRY_WAIT="${RETRY_WAIT:-15}"     # seconds between version checks
@@ -39,7 +39,10 @@ LOG_DIR="${LOG_DIR:-./logs}"
 mkdir -p "$LOG_DIR"
 
 START_TS="$(date -u +%Y%m%dT%H%M%SZ)"
-SCRIPT_LOG="${LOG_DIR}/script_${START_TS}.log"
+RUN_LOG_DIR="${LOG_DIR}/${START_TS}"
+mkdir -p "$RUN_LOG_DIR"
+
+SCRIPT_LOG="${RUN_LOG_DIR}/script.log"
 : > "$SCRIPT_LOG"
 
 log() {
@@ -50,6 +53,7 @@ log() {
 log "Starting balenaOS update process for device: $DEVICE_UUID"
 log "Will process ${#OS_VERSIONS[@]} OS version(s)"
 log "Script log: $SCRIPT_LOG"
+log "Run log dir: $RUN_LOG_DIR"
 echo ""
 
 is_html_error() {
@@ -135,7 +139,7 @@ for os_version in "${OS_VERSIONS[@]}"; do
     # Run fsck on each partition and collect logs
     for partition in "${PARTITIONS[@]}"; do
         partition_name=$(basename "$partition")
-        log_file="${LOG_DIR}/${partition_name}_${os_version}.log"
+        log_file="${RUN_LOG_DIR}/${partition_name}_${os_version}.log"
 
         log "Running fsck on $partition..."
 

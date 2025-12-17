@@ -19,9 +19,9 @@ LOG_DIR=./logs \
 ```
 
 Outputs:
-- `./logs/script_<UTC_TIMESTAMP>.log`: high-level progress log (update transitions + wait loops + fsck errors)
-- `./logs/mmcblk0p2_<os_version>.log`: fsck output + exit code
-- `./logs/mmcblk0p3_<os_version>.log`: fsck output + exit code
+- `./logs/<UTC_TIMESTAMP>/script.log`: high-level progress log (update transitions + wait loops + fsck errors)
+- `./logs/<UTC_TIMESTAMP>/mmcblk0p2_<os_version>.log`: fsck output + exit code
+- `./logs/<UTC_TIMESTAMP>/mmcblk0p3_<os_version>.log`: fsck output + exit code
 
 ### Behavior notes / knobs
 
