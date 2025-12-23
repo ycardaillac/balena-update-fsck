@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # Configuration
-DEVICE_UUID="${DEVICE_UUID:-4a7637ebf6280506960f7f407aabdf11}"
+DEVICE_UUID="${DEVICE_UUID:-fda36b59babced29486dc795442ed4d7}"
 # Wait at least 3 minutes after triggering update before checking version.
 WAIT_TIME="${WAIT_TIME:-180}"
 RETRY_WAIT="${RETRY_WAIT:-15}"     # seconds between version checks
@@ -12,18 +12,18 @@ UPDATE_MAX_TRIES="${UPDATE_MAX_TRIES:-5}"     # number of os-update retries on H
 
 # List of OS versions to upgrade to
 OS_VERSIONS=(
-    "6.1.21"
-    "6.1.21+rev1"
-    "6.1.24"
-    "6.1.24+rev1"
-    "6.3.18"
-    "6.3.23"
-    "6.4.1+rev1"
-    "6.4.1+rev2"
-    "6.4.1+rev3"
-    "6.4.2"
-    "6.4.2+rev1"
-    "6.4.3"
+    # "6.1.21"
+    # "6.1.21+rev1"
+    # "6.1.24"
+    # "6.1.24+rev1"
+    # "6.3.18"
+    # "6.3.23"
+    # "6.4.1+rev1"
+    # "6.4.1+rev2"
+    # "6.4.1+rev3"
+    # "6.4.2"
+    # "6.4.2+rev1"
+    # "6.4.3"
     "6.4.3+rev1"
     "6.5.1"
 )
@@ -135,6 +135,11 @@ for os_version in "${OS_VERSIONS[@]}"; do
         log "update did not apply to $os_version"
         exit 1
     fi
+    
+    # Print disk state before fsck
+    log "Checking /dev/disk/by-state/..."
+    disk_state="$( (echo "ls -l /dev/disk/by-state/ | grep active; exit;" | balena device ssh "$DEVICE_UUID" 2>&1) || true )"
+    log "$disk_state"
     
     # Run fsck on each partition and collect logs
     for partition in "${PARTITIONS[@]}"; do
